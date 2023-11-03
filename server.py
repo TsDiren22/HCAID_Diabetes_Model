@@ -1,4 +1,5 @@
 from flask import Flask, jsonify, request, send_file
+from flask_cors import CORS
 import pandas as pd
 import joblib
 import shap
@@ -8,26 +9,43 @@ import matplotlib.pyplot as plt
 from tensorflow.keras.models import load_model
 
 app = Flask(__name__)
+CORS(app)
 
-@app.route("/predict", methods=['POST'])
+
+@app.route("/predict", methods=["POST"])
 def do_prediction():
     json = request.get_json()
+
+    # convert all "true" to 1 and all "false" to 0
+    for key in json:
+        if json[key] == "true":
+            json[key] = 1
+        elif json[key] == "false":
+            json[key] = 0
+
     df = pd.DataFrame(json, index=[0])
 
     # predict
-    model = load_model('Model/diabetes_model_1500.keras')
+    model = load_model("Model/diabetes_model_1500.keras")
     y_pred = model.predict(df)
     pred_diabetes = int(y_pred[0])
-    
+
     # shap
     explainer = joblib.load(filename="Shap/explainer.bz2")
     shap_values = explainer.shap_values(df)
 
     i = 0
-    shap.force_plot(explainer.expected_value[i], shap_values[i], df.iloc[i], matplotlib=True, show=False, plot_cmap=['#77dd77', '#f99191'])
+    shap.force_plot(
+        explainer.expected_value[i],
+        shap_values[i],
+        df.iloc[i],
+        matplotlib=True,
+        show=False,
+        plot_cmap=["#77dd77", "#f99191"],
+    )
 
     buf = io.BytesIO()
-    plt.savefig(buf, format="png", dpi=150, bbox_inches='tight')
+    plt.savefig(buf, format="png", dpi=150, bbox_inches="tight")
     buf.seek(0)
 
     # Save the image to a temporary file
@@ -36,15 +54,17 @@ def do_prediction():
         tmp_file.write(buf.read())
 
     # Return the image URL in the response
-    result_map = {0: 'No', 1: 'Yes'}
+    result_map = {0: "No", 1: "Yes"}
     image_url = "/get_image"
-    return jsonify({'diabetes': result_map[pred_diabetes], 'image_url': image_url})
+    return jsonify({"diabetes": result_map[pred_diabetes], "image_url": image_url})
 
-@app.route('/get_image')
+
+@app.route("/get_image")
 def get_image():
     # Return the saved image file
-    return send_file("force_plot.png", mimetype='image/png')
+    return send_file("force_plot.png", mimetype="image/png")
+
 
 if __name__ == "__main__":
     port = 5000
-    app.run(host='0.0.0.0', port=port)
+    app.run(host="0.0.0.0", port=port)
