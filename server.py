@@ -3,6 +3,7 @@ from flask_cors import CORS
 import pandas as pd
 import joblib
 import shap
+import os
 import base64
 import io
 import matplotlib.pyplot as plt
@@ -27,8 +28,16 @@ def do_prediction_good():
     print(json_data)
     df = pd.DataFrame(json_data, index=[0])
 
+    # Print current working directory
+    print("Current directory: " + os.getcwd())
+
     # predict
-    model = load_model('Model/diabetes_good_model.keras')
+    model_path = 'Model/diabetes_good_model.keras'
+    if os.path.exists(model_path):
+        model = load_model(model_path)
+    else:
+        print(f"Model file '{model_path}' does not exist.")
+        
     y_pred = model.predict(df)
     pred_diabetes = int(y_pred[0])
     
