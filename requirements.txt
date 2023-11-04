@@ -4,4 +4,4 @@ Flask-Cors==4.0.0
 tensorboard==2.11.0
 tensorflow==2.11.0
 tensorflow-estimator==2.11.0
-shap==0.43.0
+shap==0.42.0
