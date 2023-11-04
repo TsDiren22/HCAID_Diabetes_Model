@@ -5,4 +5,4 @@ tensorboard==2.11.0
 tensorflow==2.11.0
 tensorflow-estimator==2.11.0
 shap==0.42.0
-matplotlib @ file:///D:/bld/matplotlib-suite_1688684981096/work
+matplotlib==3.4.3
