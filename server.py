@@ -14,6 +14,17 @@ CORS(app)
 @app.route("/predictgood", methods=['POST'])
 def do_prediction_good():
     json_data = request.get_json()
+    json_data = {
+        "age": json_data["age"],
+        "hypertension": json_data["hypertension"],
+        "heart_disease": json_data["heart_disease"],
+        "bmi": json_data["bmi"],
+        "HbA1c_level": json_data["HbA1c_level"],
+        "blood_glucose_level": json_data["blood_glucose_level"],
+        "gender_encoded": json_data["gender_encoded"],
+        "smoking_history_encoded": json_data["smoking_history_encoded"]
+    }
+    print(json_data)
     df = pd.DataFrame(json_data, index=[0])
 
     # predict
@@ -26,7 +37,7 @@ def do_prediction_good():
     shap_values = explainer.shap_values(df)
 
     i = 0
-    shap_plot = shap.force_plot(explainer.expected_value[i], shap_values[i], df.iloc[i], matplotlib=True, show=False, plot_cmap=['#77dd77', '#f99191'])
+    shap.force_plot(explainer.expected_value[i], shap_values[i], df.iloc[i], matplotlib=True, show=False, plot_cmap=['#77dd77', '#f99191'])
 
     # Save the plot as a Base64 encoded string
     buf = io.BytesIO()
@@ -36,11 +47,22 @@ def do_prediction_good():
 
     # Return the Base64-encoded image string in the response
     result_map = {0: 'No', 1: 'Yes'}
+    print(result_map[pred_diabetes])
     return jsonify({'diabetes': result_map[pred_diabetes], 'image_base64': base64_image})
 
 @app.route("/predictbad", methods=['POST'])
 def do_prediction_bad():
     json_data = request.get_json()
+    json_data = {
+        "age": json_data["age"],
+        "hypertension": json_data["hypertension"],
+        "heart_disease": json_data["heart_disease"],
+        "bmi": json_data["bmi"],
+        "HbA1c_level": json_data["HbA1c_level"],
+        "blood_glucose_level": json_data["blood_glucose_level"],
+        "gender_encoded": json_data["gender_encoded"],
+        "smoking_history_encoded": json_data["smoking_history_encoded"]
+    }
     df = pd.DataFrame(json_data, index=[0])
 
     # predict
@@ -53,7 +75,7 @@ def do_prediction_bad():
     shap_values = explainer.shap_values(df)
 
     i = 0
-    shap_plot = shap.force_plot(explainer.expected_value[i], shap_values[i], df.iloc[i], matplotlib=True, show=False, plot_cmap=['#77dd77', '#f99191'])
+    shap.force_plot(explainer.expected_value[i], shap_values[i], df.iloc[i], matplotlib=True, show=False, plot_cmap=['#77dd77', '#f99191'])
 
     # Save the plot as a Base64 encoded string
     buf = io.BytesIO()
