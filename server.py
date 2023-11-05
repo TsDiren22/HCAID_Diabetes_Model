@@ -55,7 +55,7 @@ def do_prediction_good():
     base64_image = base64.b64encode(buf.read()).decode("utf-8")
 
     # Return the Base64-encoded image string in the response
-    result_map = {0: 'No', 1: 'Yes'}
+    result_map = {0: False, 1: True}
     print(result_map[pred_diabetes])
     return jsonify({'diabetes': result_map[pred_diabetes], 'image_base64': base64_image})
 
@@ -92,8 +92,7 @@ def do_prediction_bad():
     buf.seek(0)
     base64_image = base64.b64encode(buf.read()).decode("utf-8")
 
-    # Return the Base64-encoded image string in the response
-    result_map = {0: 'No', 1: 'Yes'}
+    result_map = {0: False, 1: True}
     return jsonify({'diabetes': result_map[pred_diabetes], 'image_base64': base64_image})
 
 if __name__ == "__main__":
