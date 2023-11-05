@@ -8,16 +8,16 @@ trigger:
 
 variables:
   # Azure Resource Manager connection created during pipeline creation
-  azureServiceConnectionId: 'd9ca78e6-baf1-4b93-9f23-292fa63bc5d9'
+  azureServiceConnectionId: '40a63c68-6cd8-477d-a73f-fae72f3d530b'
 
   # Web app name
-  webAppName: 'hcaidapi'
+  webAppName: 'hcaidwebapi'
 
   # Agent VM image name
   vmImageName: 'ubuntu-latest'
 
   # Environment name
-  environmentName: 'hcaidapi'
+  environmentName: 'hcaidwebapi'
 
   # Project root folder. Point to the folder containing manage.py file.
   projectRoot: $(System.DefaultWorkingDirectory)
