@@ -1,8 +1,8 @@
 cors==1.0.1
 Flask==2.0.0
 Flask-Cors==4.0.0
-tensorboard==2.14.0
-tensorflow==2.14.0
-tensorflow-estimator==2.14.0
+tensorboard==2.13.0
+tensorflow==2.13.0
+tensorflow-estimator==2.13.0
 shap==0.42.0
 matplotlib==3.4.3
