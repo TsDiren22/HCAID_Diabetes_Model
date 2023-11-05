@@ -7,7 +7,7 @@ import os
 import base64
 import io
 import matplotlib.pyplot as plt
-from tensorflow.keras.models import load_model
+import tensorflow as tf
 
 app = Flask(__name__)
 CORS(app)
@@ -34,7 +34,7 @@ def do_prediction_good():
     # predict
     model_path = 'Model/diabetes_good_model.keras'
     if os.path.exists(model_path):
-        model = load_model(model_path)
+        model = tf.keras.models.load_model(model_path)
     else:
         print(f"Model file '{model_path}' does not exist.")
         
@@ -75,7 +75,7 @@ def do_prediction_bad():
     df = pd.DataFrame(json_data, index=[0])
 
     # predict
-    model = load_model('Model/diabetes_bad_model.keras')
+    model = tf.keras.models.load_model('Model/diabetes_bad_model.keras')
     y_pred = model.predict(df)
     pred_diabetes = int(y_pred[0])
     
